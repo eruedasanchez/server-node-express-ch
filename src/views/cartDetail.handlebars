@@ -1,0 +1,29 @@
+<h1>Carrito</h1>
+<hr>
+<script>
+    var cartStatus = '{{cartStatus}}';
+</script>
+<div id="cartAlert" class="success">El carrito está vacio</div>
+<script>
+    if (cartStatus === 'loaded') {
+        document.getElementById('cartAlert').style.display = 'none';
+    } 
+</script>
+<br>
+<ul>
+    {{#each productsSelected}}
+        <li>Nombre del producto: {{this.productId.title}}</li>
+        <li>Descripcion del producto: {{this.productId.description}}</li>
+        <li>Precio del producto: ${{this.productId.price}}</li>
+        <li>Cantidad: {{this.quantity}}</li>
+        <br>
+    {{/each}}
+</ul>
+<hr>
+<br>
+<ul class="menu"><li> <a href="/products?userFirstName={{userFirstName}}&userLastName={{userLastName}}&userEmail={{userEmail}}&userRole={{userRole}}&cartId={{cartId}}">Continuar comprando</a></li></ul>
+
+
+
+
+

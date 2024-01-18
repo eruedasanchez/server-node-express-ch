@@ -1,0 +1,109 @@
+<h1>Bienvenido {{userFirstName}} {{userLastName}}</h1>
+<hr>
+<h3>Informacion del usuario: Email: {{userEmail}}, Rol: {{userRole}}</h3>
+<hr>
+<script>
+    var userRole = '{{userRole}}';
+</script>
+<br>
+<h3>Carga/actualiza tus datos/productos</h3>
+<form action="/api/users/{{userId}}/profiles" method="post" enctype="multipart/form-data">
+    <p>Cargar imagen de perfil</p>
+    {{#if profileSuccessfullyLoad}}
+        <div class="success">Se ha cargado exitosamente su imagen de perfil</div>
+    {{/if}}
+    <input type="file" name="profiles">
+    <input type="submit" value="Subir imagen de perfil">
+</form>
+<form action="/api/users/{{userId}}/products" method="post" enctype="multipart/form-data">
+    <p>Cargar imagenes de productos</p>
+    {{#if productsSuccessfullyLoad}}
+        <div class="success">Se han cargado exitosamente los productos</div>
+    {{/if}}
+    <input type="file" name="products" multiple>
+    <input type="submit" value="Subir imagenes de tus productos">
+</form>
+<form action="/api/users/{{userId}}/documents" method="post" enctype="multipart/form-data">
+    <p>Cargar documentación personal o de la cuenta</p>
+    {{#if documentsSuccessfullyLoad}}
+        <div class="success">Se han cargado exitosamente los documentos</div>
+    {{/if}}
+    <input type="file" name="documents" multiple>
+    <input type="submit" value="Subir documentación personal o información de tu cuenta">
+</form>
+<hr>
+<h3>Listado de productos almacenados en MongoDB Atlas</h3>
+<hr>
+<ul>
+    {{#each products}}
+        <li>Id del producto: {{this._id}}</li>
+        <li>Titulo del producto: {{this.title}}</li>
+        <li>Descripcion del producto: {{this.description}}</li>
+        <li>Codigo del producto: {{this.code}}</li>
+        <li>Precio del producto: {{this.price}}</li>
+        <li>Status del producto: {{this.status}}</li>
+        <li>Stock del producto: {{this.stock}}</li>
+        <li>Categoria del producto: {{this.category}}</li>
+        <li>
+            Thumbnails:
+                <ol>
+                    {{#each this.thumbnails}}
+                        <li>{{this}}</li>
+                    {{/each}}
+                </ol>
+        </li>
+        <form action="/api/carts/{{../cartId}}/product/{{this._id}}" method="post">
+            <button type="submit">Agregar al carrito</button>
+        </form>
+    <br>
+    <br>
+    <br>
+    {{/each}}
+</ul>
+<br>
+
+<a href="/products?userFirstName={{userFirstName}}&userLastName={{userLastName}}&userEmail={{userEmail}}&userRole={{userRole}}&cartId={{cartId}}&page=1">Pag.1</a>
+
+{{#if hasPrevPage}} 
+    <a href="/products?userFirstName={{userFirstName}}&userLastName={{userLastName}}&userEmail={{userEmail}}&userRole={{userRole}}&cartId={{cartId}}&page={{prevPage}}">Prev.Pag</a>
+    {{else}}
+    <span>Prev.Pag</span>
+{{/if}}
+
+{{#if hasNextPage}} 
+    <a href="/products?userFirstName={{userFirstName}}&userLastName={{userLastName}}&userEmail={{userEmail}}&userRole={{userRole}}&cartId={{cartId}}&page={{nextPage}}">Next.Pag</a>
+    {{else}}
+    <span>Next.Pag</span>
+{{/if}}
+
+
+<a href="/products?userFirstName={{userFirstName}}&userLastName={{userLastName}}&userEmail={{userEmail}}&userRole={{userRole}}&cartId={{cartId}}&page={{totalPages}}">Ult.Pag</a>
+<hr>
+<br>
+<ul class="menu"><li> <a href="/cartDetail?userFirstName={{userFirstName}}&userLastName={{userLastName}}&userEmail={{userEmail}}&userRole={{userRole}}&cartId={{cartId}}">Ver Carrito</a></li></ul>
+<hr>    
+<form action="/api/users/cartStatus/{{cartId}}" method="post">
+    {{#if cartEmpty}}
+        <div class="error">El carrito está vacio. Recuerde agregar al menos un producto para continuar con el proceso de compra</div>
+    {{/if}}
+    <input type="submit" value="Comprar">
+</form>
+<hr>  
+<form id="premiumForm" action="/api/users/premium/{{userId}}" method="post">
+    <button type="submit">Cambiar a usuario modo user</button>
+</form>
+<form id="userForm" action="/api/users/premium/{{userId}}" method="post">
+    {{#if mandatoryDocumentEmpty}}
+        <div class="error">Error. Debes cargar tu foto de perfil o documentación para poder cambiar de rol</div>
+    {{/if}}
+    <button type="submit">Cambiar a usuario modo premium</button>
+</form>
+<script>
+    if (userRole === 'premium') {
+        document.getElementById('userForm').style.display = 'none';
+    } else {
+        document.getElementById('premiumForm').style.display = 'none';
+    }
+</script>
+<ul class="menu"><li> <a href="/api/sessions/logout">Logout</a></li></ul>
+

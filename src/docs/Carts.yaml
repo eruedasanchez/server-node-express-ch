@@ -1,0 +1,669 @@
+paths:
+  /api/carts:
+    post:
+      summary: Crea un carrito nuevo en la DB
+      tags:
+        - Carts
+      responses:
+        "201":
+          description: Devuelve un objeto con la propiedad status "ok" y una propiedad newCart que contiene un arreglo de productos vacio
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/CreateCart'
+        "400":
+          description: Devuelve un objeto con la propiedad error "Error al crear un carrito" y la segunda propiedad contiene la propiedad detail con la descripción del error
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/CartError'
+  /api/carts/{cid}:
+    get:
+      summary: Obtiene el carrito de la DB que coincida con el cid pasado por params
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Ingrese el cid del carrito que desea solicitar
+        schema:
+          type: ObjectId
+      responses:
+        "200":
+          description: Devuelve un objeto con la propiedad status "ok" y una propiedad MongoDBCart con el carrito de cid solicitado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/GetCartByCid'
+        "404":
+          description: Devuelve un objeto con la propiedad error "Not found" y la propiedad detail con la descripción del error
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/GetCartByCidError'
+    put:
+      summary: Modifica el carrito de la DB que coincida con el cid pasado por params
+      tags:
+        - Carts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+            $ref: '#components/requestBodies/modifyCart'
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Ingrese el CID del carrito que desea modificar
+          schema:
+            type: ObjectId
+      responses:
+        "200":
+          description: Devuelve un objeto con la propiedad status "ok" y la propiedad updatedProducts con el detalle de la operación de modificación aplicada al carrito solicitado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/PutCart'
+        "400":
+          description: Devuelve un objeto con la propiedad error "Bad Request" y con la propiedad detail indicando que solo se admiten cantidades positivas 
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/NegativeQuantityError'
+        "404":
+          description: Devuelve un objeto con la propiedad error "Not found" y con la propiedad detail indicando que no puede haber campos vacio 
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/IncompleteFieldsCartError'
+        "500":
+          description: Devuelve un objeto con la propiedad error "Error no customizado" y con la propiedad detail indicando que contacte al programador 
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/InternalServerError'
+    delete:
+      summary: Elimina todos los productos del carrito que coincida con el cid pasado por params
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Ingrese el CID del carrito que desea vaciar
+        schema:
+          type: ObjectId
+      responses:
+        "200":
+          description: Devuelve un objeto con la propiedad status "ok" y con la propiedad cleanCart con el detalle de la operación de eliminación aplicada al carrito solicitado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/CleanCart'
+        "404":
+          description: Devuelve un objeto con un Error donde la primer componente muestra el campo error Unexpected error y la otra componente con el campo detalle con el mensaje del error
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/CleanCartError'
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Agrega al carrito de la DB que coincida con el cid pasado por params, una cantidad del producto pasado por pid
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Ingrese el CID del carrito que desea agregarle un producto
+        schema:
+          type: ObjectId
+      - name: pid
+        in: path
+        required: true
+        description: Ingrese el PID del producto que desea agregar
+        schema:
+          type: ObjectId
+      responses:
+        "201":
+          description: Devuelve un objeto con la propiedad status "ok" y con la propiedad cartSelected con el carrito de cid solicitado actualizado con el nuevo producto
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/CartSelected'
+        "401":
+          description: Devuelve un objeto con un Error de Autorización indicando que no tiene los permisos para publicar el producto en el carrito seleccionado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/UnauthorizedError'
+    put:
+      summary: Modifica la cantidad del producto con pid solicitado en el carrito de la DB que coincida con el cid pasado por params
+      tags:
+        - Carts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+            $ref: '#components/requestBodies/modifyQuantity'
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Ingrese el CID del carrito que desea modificar
+          schema:
+            type: ObjectId
+        - name: pid
+          in: path
+          required: true
+          description: Ingrese el PID del producto que desea modificar su cantidad
+          schema:
+            type: ObjectId
+      responses:
+        "201":
+          description: Devuelve un objeto con la propiedad status "ok" y la propiedad quantityUpdated con el con el carrito y la cantidad del producto solicitado actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/QuantityUpdated'
+        "400":
+          description: Devuelve un objeto con la propiedad error "Bad Request" y con la propiedad detail indicando que solo se admiten cantidades positivas 
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/NegativeQuantityError'
+        "500":
+          description: Devuelve un objeto con un Error donde la primer componente muestra el campo error Unexpected error y la otra componente con el campo detalle con el mensaje del error
+    delete:
+      summary: Elimina el producto solicitado por params del carrito que coincida con el cid pasado por params
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Ingrese el CID del carrito que desea acceder
+        schema:
+          type: ObjectId
+      - name: pid
+        in: path
+        required: true
+        description: Ingrese el PID del producto que desea eliminar del carrito
+        schema:
+          type: ObjectId
+      responses:
+        "200":
+          description: Devuelve un objeto con la propiedad status "ok" y la propiedad cartUpdated con detalle de la operación de eliminación de un producto en un carrito
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/DeleteProductInCart'
+        "404":
+          description: Devuelve un objeto con un Error donde la primer componente muestra el campo error Unexpected error y la otra componente con el campo detalle con el mensaje del error
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/DeleteProductInCartError'
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Genera un ticket de compra para el carrito con cid pasado por params
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Ingrese el CID del carrito al que desea generarle un ticket
+        schema:
+          type: ObjectId
+      responses:
+        "201":
+          description: Devuelve un objeto con la propiedad status "success" si hay stock disponible de todos los productos que se agregaron al carrito o "incomplete" en caso contrario, una propiedad purchaseTicket con el detalle (datos del cliente e importe total de la compra) de la compra generada y la propiedad idsProductsWithoutStock con un arreglo con los id's de los productos que no se pudieron procesar, o sea, que no tenian stock suficiente 
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/TicketPurchase' 
+        "500":
+          description: Devuelve un objeto con un Error donde la primer propiedad muestra error Unexpected error y la otra propiedad detalle muestra el mensaje del error
+components:
+  schemas:
+    Product: 
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado por Mongo
+        title:
+          type: string
+          description: Nombre del producto
+        description:
+          type: string
+          description: Descripción del producto   
+        code:
+          type: string
+          description: Código del producto
+        status:
+          type: boolean
+          description: Estado/disponibilidad del producto
+        stock: 
+          type: number
+          description: Stock actual del producto
+        category:
+          type: string
+          description: Categoria del producto
+        thumbnails:
+          type: array
+          items:
+            type: string
+          description: Arreglo con enlaces a miniaturas del producto  
+        owner:
+          type: string
+          description: Propietario del producto  
+        __v:
+          type: number
+      example:
+        _id: ObjectId("656e5a832943f50a737deae9")
+        title: Producto dos
+        description: Este es un producto prueba dos 
+        code: abc123p2 
+        price: 202
+        status: true
+        stock: 32
+        category: muebles 
+        thumbnails: [thumbnail-p2-1, thumbnail-p2-2, thumbnail-p2-3]
+        owner: admin
+    MongooseInfo:
+      type: object
+      properties:
+        acknowledged:
+          type: boolean
+        modifiedCount:
+          type: number
+        upsertedId:
+          type: null
+        upsertedCount:
+          type: number
+        matchedCount:
+          type: number
+      example:
+        acknowledged: true
+        modifiedCount: 1
+        upsertedId: null
+        upsertedCount: 0
+        matchedCount: 1
+    MongoDBCart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                $ref: '#/components/schemas/Product'
+              quantity:
+                type: number
+              _id:
+                type: ObjectId
+        __v:
+          type: number
+      example:
+        _id: ObjectId("656dff57aea2a8a45e4c4714")
+        products:
+          - productId:
+              _id: "656e5a832943f50a737deae9"
+              title: "Producto dos"
+              description: "Este es un producto prueba dos"
+              code: "abc123p2"
+              price: 202
+              status: true
+              stock: 32
+              category: "muebles"
+              thumbnails:
+                - "thumbnail-p2-1"
+                - "thumbnail-p2-2"
+                - "thumbnail-p2-3"
+              owner: "admin"
+              __v: 0
+            quantity: 4
+            _id: "656dff57aea2a8a45e4c4714"
+        __v: 0
+    Cart:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: ObjectID
+              quantity:
+                type: number
+      example:
+        _id: ObjectId("656df58ff045035c7d4dd8a6")
+        products:
+          - productId: "656e5a832943f50a737deae9"
+            quantity: 5
+          - productId: "656e82d3aecef67c8207a314"
+            quantity: 3
+          - productId: "656e82e7aecef67c8207a319"
+            quantity: 2
+    CartError:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Nombre del error
+        detail:
+          type: string
+          description: Descripción del error 
+      example:
+        error: Error al crear un carrito
+        detail: cartAdded is not defined
+    CreateCart:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Estado de la solicitud
+        newCart:
+          type: object
+          properties:
+            products:
+              type: array
+            _id:
+              type: ObjectId
+            __v:
+              type: number
+      example:
+        status: "ok"
+        newCart: 
+          products: []
+          _id: ObjectId("657f420afea472e130c34a59")
+          __v: 0
+    GetCartByCidError:
+      allOf:
+        - $ref: '#/components/schemas/CartError'
+        - example:
+            error: Not found
+            detail: Id hola ingresado tiene un formato invalido  
+    GetCartByCid:
+      type: object
+      properties:
+        status:
+          type: string
+        MongoDBCart:
+          $ref: '#/components/schemas/MongoDBCart'
+      example:
+        status: "ok"
+        MongoDBCart:
+          _id: ObjectId("656dff57aea2a8a45e4c4714")
+          products:
+            - productId:
+                _id: "656e5a832943f50a737deae9"
+                title: "Producto dos"
+                description: "Este es un producto prueba dos"
+                code: "abc123p2"
+                price: 202
+                status: true
+                stock: 32
+                category: "muebles"
+                thumbnails:
+                  - "thumbnail-p2-1"
+                  - "thumbnail-p2-2"
+                  - "thumbnail-p2-3"
+                owner: "admin"
+                __v: 0
+              quantity: 4
+              _id: "656dff57aea2a8a45e4c4714"
+          __v: 0
+    IncompleteFieldsCartError:
+      allOf:
+        - $ref: '#/components/schemas/CartError'
+        - example:
+            error: Not found
+            detail: Cada producto del arreglo products ingresado por el body debe tener obligatoriamente los campos productId y quantity completos.
+    NegativeQuantityError:
+      allOf:
+        - $ref: '#/components/schemas/CartError'
+        - example:
+            error: Bad Request
+            detail: Solo se admiten cantidades positivas en cada uno de los productos ingresados.
+    InternalServerError:
+      allOf:
+        - $ref: '#/components/schemas/CartError'
+        - example:
+            error: Error no customizado
+            detail: Contacte al programador
+    PutCart:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Estado de la solicitud
+        updatedProducts:
+          $ref: '#/components/schemas/MongooseInfo'
+          description: Información de la solicitud brindada por Mongoose
+      example:
+        status: "ok"
+        updatedProducts: 
+          acknowledged: true
+          modifiedCount: 1
+          upsertedId: null
+          upsertedCount: 0
+          matchedCount: 1
+    CleanCart:   
+      type: object
+      properties:
+        status:
+          type: string
+          description: Estado de la solicitud
+        cleanCart:
+          $ref: '#/components/schemas/MongooseInfo'
+          description: Información de la solicitud brindada por Mongoose
+      example:
+        status: "ok"
+        cleanCart: 
+          acknowledged: true
+          modifiedCount: 1
+          upsertedId: null
+          upsertedCount: 0
+          matchedCount: 1 
+    CleanCartError:
+      allOf:
+        - $ref: '#/components/schemas/CartError'
+        - example:
+            error: Unexpected error
+            detail: Id hola ingresado tiene un formato invalido
+    UnauthorizedError:
+      allOf:
+        - $ref: '#/components/schemas/CartError'
+        - example:
+            error: Error de autorización
+            detail: No posee los permisos para modificar el carrito seleccionado
+    CartSelected:
+      type: object
+      properties:
+        status:
+          type: string
+        cartSelected:
+          $ref: '#/components/requestBodies/modifyCart'
+        __v:
+          type: string
+      example:
+        status: ok
+        cartSelected: 
+          - productId: "ObjectId(656e5a832943f50a737deae9)"
+            quantity: 4
+          - productId: "ObjectId(656e82d3aecef67c8207a314)"
+            quantity: 3
+          - productId: "ObjectId(656e82e7aecef67c8207a319)"
+            quantity: 1
+        __v: 0
+    QuantityUpdated:
+      type: object
+      properties:
+        status:
+          type: string
+        quantityUpdated:
+          type: object
+          properties:
+            _id:
+              type: ObjectId
+            products:
+              type: array
+              items:
+                type: object
+                properties:
+                  productId:
+                    type:  ObjectId
+                  quantity:
+                    type: numbet
+                  _id:
+                    type: ObjectId
+                required:
+                  - productId
+                  - quantity
+                  - _id
+            __v:
+              type: number
+          required:
+            - _id
+            - products
+      example:
+        status: "ok"
+        quantityUpdated:
+          _id: "656dff57aea2a8a45e4c4714"
+          products:
+            - productId: "656e5a832943f50a737deae9"
+              quantity: 10
+              _id: "657f77ede2c1f41fbe2df37d"
+            - productId: "656e82d3aecef67c8207a314"
+              quantity: 20
+              _id: "657f77ede2c1f41fbe2df37e"
+            - productId: "656e82e7aecef67c8207a319"
+              quantity: 2
+              _id: "657f77ede2c1f41fbe2df37f"
+          __v: 0
+    DeleteProductInCartError:
+      allOf:
+        - $ref: '#/components/schemas/CartError'
+        - example:
+            error: Unexpected error
+            detail: Id hola ingresado tiene un formato invalido
+    DeleteProductInCart:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Estado de la solicitud
+        cartUpdated:
+          $ref: '#/components/schemas/MongooseInfo'
+          description: Información de la solicitud brindada por Mongoose
+      example:
+        status: "ok"
+        cartUpdated: 
+          acknowledged: true
+          modifiedCount: 1
+          upsertedId: null
+          upsertedCount: 0
+          matchedCount: 1
+    PurchaseTicket:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código del ticket de compra
+        purchase_datetime:
+          type: string
+          format: date-time
+          description: Fecha y hora de la compra
+        amount:
+          type: number
+          description: Monto de la compra
+        purchaser:
+          type: string
+          description: Correo electrónico del comprador
+        _id:
+          type: string
+          description: ID del ticket de compra
+        createdAt:
+          type: string
+          format: date-time
+          description: Fecha y hora de creación
+        updatedAt:
+          type: string
+          format: date-time
+          description: Fecha y hora de actualización
+        __v:
+          type: number
+          description: Versión del documento
+      example:
+        code: "99dcc579c2da4599ba10f43c1aafbcdd"
+        purchase_datetime: "2023-12-18T00:31:35.883Z"
+        amount: 409
+        purchaser: "ezequiel.ruedasanchez@gmail.com"
+        _id: "657f92e7ec1a38a477975a5b"
+        createdAt: "2023-12-18T00:31:35.897Z"
+        updatedAt: "2023-12-18T00:31:35.897Z"
+        __v: 0
+    TicketPurchase:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Estado de la respuesta
+        purchaseTicket:
+          $ref: '#/components/schemas/PurchaseTicket'
+          description: Detalles del ticket de compra
+        idsProductsWithoutStock:
+          type: array
+          items:
+            type: string
+          description: Lista de IDs de productos sin stock
+      example:
+        status: "success"
+        purchaseTicket:
+          code: "99dcc579c2da4599ba10f43c1aafbcdd"
+          purchase_datetime: "2023-12-18T00:31:35.883Z"
+          amount: 409
+          purchaser: "ezequiel.ruedasanchez@gmail.com"
+          _id: "657f92e7ec1a38a477975a5b"
+          createdAt: "2023-12-18T00:31:35.897Z"
+          updatedAt: "2023-12-18T00:31:35.897Z"
+          __v: 0
+        idsProductsWithoutStock: []
+  requestBodies:
+    modifyCart:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: ObjectID
+              quantity:
+                type: number
+      example:
+        products:
+          - productId: "656e5a832943f50a737deae9"
+            quantity: 4
+          - productId: "656e82d3aecef67c8207a314"
+            quantity: 3
+          - productId: "656e82e7aecef67c8207a319"
+            quantity: 1
+    modifyQuantity:
+      type: object
+      properties:
+        quantity:
+          type: number
+      example:
+        quantity: 10

@@ -1,0 +1,26 @@
+<h1>Mocking de productos</h1>
+<hr>
+<hr>
+<ul>
+    {{#each mockingProducts}}
+        <li>Id del producto: {{this._id}}</li>
+        <li>Titulo del producto: {{this.title}}</li>
+        <li>Descripcion del producto: {{this.description}}</li>
+        <li>Codigo del producto: {{this.code}}</li>
+        <li>Precio del producto: {{this.price}}</li>
+        <li>Status del producto: {{this.status}}</li>
+        <li>Stock del producto: {{this.stock}}</li>
+        <li>Categoria del producto: {{this.category}}</li>
+        <li>
+            Thumbnails:
+                <ol>
+                    {{#each this.thumbnails}}
+                        <li>{{this}}</li>
+                    {{/each}}
+                </ol>
+        </li>
+    <br>
+    <br>
+    {{/each}}
+</ul>
+<br>

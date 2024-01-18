@@ -1,0 +1,3 @@
+{"level":"fatal","message":"Error al cargar la documentación. Detalle: fileType is not defined","timestamp":"2024-01-07T17:36:08.776Z"}
+{"level":"fatal","message":"Error al cargar la documentación. Detalle: Cannot read properties of undefined (reading '_id')","timestamp":"2024-01-07T21:14:05.619Z"}
+{"level":"fatal","message":"Error al cargar la documentación. Detalle: Cannot read properties of undefined (reading '_id')","timestamp":"2024-01-07T21:21:08.870Z"}

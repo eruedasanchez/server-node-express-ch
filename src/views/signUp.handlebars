@@ -1,0 +1,15 @@
+<h2>Registro de usuarios:</h2>
+<hr>
+<form action="/api/sessions/signup" method="post">
+    {{#if errorDetail}}
+    <div class="error">{{errorDetail}}</div>
+    {{/if}}
+    <input type="text" name="first_name" placeholder="Ingrese su nombre">
+    <input type="text" name="last_name" placeholder="Ingrese su apellido">
+    <input type="email" name="email" placeholder="Ingrese su email">
+    <input type="number" name="age" placeholder="Ingrese su edad">
+    <input type="password" name="password" placeholder="Ingrese su contraseña">
+    <input type="submit" value="Registrarme">
+</form>
+<br>
+<ul class="menu"><li><a href="/login">Login</a></li></ul>

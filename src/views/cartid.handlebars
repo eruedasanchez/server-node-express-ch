@@ -1,0 +1,23 @@
+<h1>Informacion CartId {{cartId}} </h1>
+<hr>
+<h3>Listado de productos almacenados en el carrito {{cartId}}</h3>
+<hr>
+<ul>
+    {{#each cartIdProducts}}
+        <p>Descripcion del {{this.productId.title}}: </p>
+        <li>Id del producto: {{this.productId._id}}</li>
+        <li>Titulo del producto: {{this.productId.title}}</li>
+        <li>Descripcion del producto: {{this.productId.description}}</li>
+        <li>Codigo del producto: {{this.productId.code}}</li>
+        <li>Precio del producto: {{this.productId.price}}</li>
+        <li>Estado del producto: {{this.productId.status}}</li>
+        <li>Categoria del producto: {{this.productId.category}}</li>
+        <li>Stock del producto: {{this.productId.stock}}</li>
+        <li>Thumbnails del producto: {{this.productId.thumbnails}}</li>
+        <li>Cantidad del producto: {{this.quantity}}</li>
+        <br>
+        <br>
+    {{/each}}
+</ul>
+<br>
+

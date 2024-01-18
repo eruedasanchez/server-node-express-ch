@@ -1,0 +1,31 @@
+<h1>Bienvenido al panel de Administración</h1>
+<hr>
+<p>Desde acá, va a poder modificar los roles y eliminar a los usuario que desee.</p>
+<br>
+<h2>Usuarios registrados en la DB</h2>
+<hr>
+{{#if changeRoleSuccessfully}}
+    <div class="success">Cambio de rol realizado con exito</div>
+{{/if}}
+<ul>
+    {{#each users}}
+        <div id="adminDetails">
+            <li>Nombre del usuario: {{this.first_name}} {{this.last_name}}</li>
+            <li>Email del usuario: {{this.email}}</li>
+            <li>Rol del usuario: {{this.role}}</li>
+            <form action="/api/users/premium/{{this._id}}" method="post">
+                <button type="submit">Modificar el rol del usuario</button>
+            </form>
+            <form action="/api/users/delete/{{this._id}}" method="post">
+                <button type="submit">Eliminar el usuario de la DB</button>
+            </form>
+            <script>
+                var userRole = '{{this.role}}';
+                if (userRole === 'admin') {
+                    document.getElementById('adminDetails').style.display = 'none';
+                } 
+            </script>
+            <br>
+        </div>
+    {{/each}}
+</ul>

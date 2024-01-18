@@ -1,0 +1,62 @@
+[
+	{
+		"_id": 1,
+		"title": "Producto uno",
+		"description": "Este es un producto prueba uno",
+		"code": "abc123p1",
+		"price": 1,
+		"status": true,
+		"stock": 101,
+		"category": "muebles",
+		"thumbnails": [
+			"thumbnail-p1-1",
+			"thumbnail-p1-2",
+			"thumbnail-p1-3"
+		]
+	},
+	{
+		"_id": 3,
+		"title": "Producto tres",
+		"description": "Este es un producto prueba tres",
+		"code": "abc123p3",
+		"price": 3,
+		"status": true,
+		"stock": 103,
+		"category": "muebles",
+		"thumbnails": [
+			"thumbnail-p3-1",
+			"thumbnail-p3-2",
+			"thumbnail-p3-3"
+		]
+	},
+	{
+		"_id": 4,
+		"title": "Producto cuatro",
+		"description": "Este es un producto prueba cuatro",
+		"code": "abc123p4",
+		"price": 4,
+		"status": true,
+		"stock": 104,
+		"category": "muebles",
+		"thumbnails": [
+			"thumbnail-p4-1",
+			"thumbnail-p4-2",
+			"thumbnail-p4-3"
+		]
+	},
+	{
+		"_id": 5,
+		"title": "Producto cinco mod",
+		"description": "Este es un producto prueba cinco mod",
+		"code": "abc123p5mod",
+		"price": 5,
+		"status": true,
+		"stock": 105,
+		"category": "muebles",
+		"thumbnails": [
+			"thumbnail-p5-1",
+			"thumbnail-p5-2",
+			"thumbnail-p5-3"
+		]
+	}
+]

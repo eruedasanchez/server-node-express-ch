@@ -1,0 +1,31 @@
+<h2>Login de usuarios:</h2>
+<hr>
+<form action="/api/sessions/login" method="post">
+
+    {{#if errorDetail}}
+    <div class="error">{{errorDetail}}</div>
+    {{/if}}
+    
+    {{#if userEmail}}
+    <div class="success">Se ha creado correctamente el usuario {{userEmail}}</div>
+    {{/if}}
+
+    {{#if logoutSuccess}}
+    <div class="mensaje">{{logoutSuccess}}</div>
+    {{/if}}
+
+    {{#if newPasswordSuccess}}
+    <div class="mensaje">{{newPasswordSuccess}}</div>
+    {{/if}}
+    
+    <input type="email" name="email" placeholder="Ingrese su email">
+    <input type="password" name="password" placeholder="Ingrese su contraseña">
+
+    <input type="submit" value="Login">
+</form>
+<br>
+<div id="mensaje"></div>
+<br>
+<ul class="menu"><li><a href="/signup">Registrate</a></li></ul>
+<ul class="menu"><li><a href="/api/sessions/github">Ingresar con Github</a></li></ul>
+<ul class="menu"><li><a href="/resetPassword">Reestablecer contraseña</a></li></ul>

@@ -1,0 +1,445 @@
+paths:
+  /api/products:
+    get:
+      summary: Obtiene los primeros diez productos almacenados en la DB o una cantidad determinada en el caso que se envien params
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Devuelve un objeto "MongoDBProducts" con la propiedad "status" success y la propiedad "payload" con los primeros diez productos de la DB 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:  
+                  MongoDBProducts:
+                    $ref: '#components/schemas/MongoDBProducts'
+        "400":
+          description: Devuelve un objeto con un Error Customizado donde la primer propiedad muestra el nombre del error y la segunda la descripción del error
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/CustomizeError'
+    post:
+      summary: Crea un producto nuevo en la DB
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+            $ref: '#components/requestBodies/createProduct'
+      responses:
+        "201":
+          description: Devuelve un objeto con la propiedad status ok y una propiedad newProduct que contiene el producto recientemente agregado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/PostProduct'
+        "400":
+          description: Devuelve un objeto con un Error Customizado donde la primer componente muestra la descripción del error y la segunda el detalle del error
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/CustomizeErrorPostProducts'
+        "404":
+          description: Devuelve un objeto con un Error Customizado donde la primer componente muestra la descripción del error y la segunda el detalle del error
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/CustomizeErrorModifyProduct'
+        
+  /api/products/{pid}:
+    get:
+      summary: Obtiene el producto de la DB que coincida con el pid pasado por params
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: Ingrese el PID del producto que desea solicitar
+        schema:
+          type: ObjectId
+      responses:
+        "200":
+          description: Devuelve un objeto con la propiedad status ok y una propiedad MongoDBProduct con el producto de pid solicitado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/GetProductById'
+        "404":
+          description: Devuelve un objeto con un Error donde la primer componente muestra la descripción del error y la segunda el detalle del error
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/CustomizeErrorGetProductById'
+    put:
+      summary: Modifica el producto de la DB que coincida con el pid pasado por params siempre y cuando el usuario este autorizado, es decir, haya creado el producto
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+            $ref: '#components/requestBodies/modifyProduct'
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Ingrese el PID del producto que desea modificar
+          schema:
+            type: ObjectId
+      responses:
+        "200":
+          description: Devuelve un objeto con la propiedad status ok y una propiedad updatedProducts con las propiedades brindadas por Mongoose luego de la operación
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/PutProduct'
+        "400":
+          description: Devuelve un Error Customizado donde la primer componente muestra la descripción del error y la segunda el detalle del error 
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/CustomizeErrorModifyProduct'
+        "401":
+          description: Devuelve un Error en el caso de no tener los permisos necesarios para modificar el producto solicitado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/UnauthorizedError'
+        
+    delete:
+      summary: Elimina el producto de la DB que coincida con el pid pasado por params siempre y cuando el usuario este autorizado, es decir, haya creado el producto
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: Ingrese el PID del producto que desea eliminar
+        schema:
+          type: ObjectId
+      responses:
+        "200":
+          description: Devuelve un objeto con la propiedad status ok y una propiedad deletedProduct con las propiedades brindadas por Mongoose luego de la operación
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/DeleteProduct'
+        "404":
+          description: Devuelve un Error Customizado donde la primer componente muestra la descripción del error y la segunda el detalle del error 
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/CustomizeErrorGetProductById'
+        "401":
+          description: Devuelve un Error en el caso de no tener los permisos necesarios para modificar el producto solicitado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/UnauthorizedErrorDelete'
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado por Mongo
+        title:
+          type: string
+          description: Nombre del producto
+        description:
+          type: string
+          description: Descripción del producto   
+        code:
+          type: string
+          description: Código del producto
+        status:
+          type: boolean
+          description: Estado/disponibilidad del producto
+        stock: 
+          type: number
+          description: Stock actual del producto
+        category:
+          type: string
+          description: Categoria del producto
+        thumbnails:
+          type: array
+          items:
+            type: string
+          description: Arreglo con enlaces a miniaturas del producto  
+        owner:
+          type: string
+          description: Propietario del producto  
+        __v:
+          type: number
+      example:
+        _id: ObjectId("656e5a832943f50a737deae9")
+        title: Producto dos
+        description: Este es un producto prueba dos 
+        code: abc123p2 
+        price: 202
+        status: true
+        stock: 32
+        category: muebles 
+        thumbnails: [thumbnail-p2-1, thumbnail-p2-2, thumbnail-p2-3]
+        owner: admin
+    MongooseInfo:
+      type: object
+      properties:
+        acknowledged:
+          type: boolean
+        modifiedCount:
+          type: number
+        upsertedId:
+          type: null
+        upsertedCount:
+          type: number
+        matchedCount:
+          type: number
+      example:
+        acknowledged: true
+        modifiedCount: 1
+        upsertedId: null
+        upsertedCount: 0
+        matchedCount: 1
+    MongoDBProducts:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Estado de la solicitud
+        payload:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+          description: Resultado de la solicitud
+        totalPages:
+          type: number
+        prevPage:
+          type: number
+          nullable: true 
+        nextPage:
+          type: number  
+          nullable: true
+        page:
+          type: number
+        hasPrevPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
+        prevLink:
+          type: number
+          nullable: true
+        nextLink:
+          type: number
+          nullable: true
+      example:
+        status: "success"
+        payload:
+          - _id: "656e5a832943f50a737deae9"
+            title: "Producto dos"
+            description: "Este es un producto prueba dos"
+            code: "abc123p2"
+            price: 202
+            status: true
+            stock: 32
+            category: "muebles"
+            thumbnails:
+              - "thumbnail-p2-1"
+              - "thumbnail-p2-2"
+              - "thumbnail-p2-3"
+            owner: "admin"
+            __v: 0
+            id: "656e5a832943f50a737deae9"
+        totalPages: 1
+        prevPage: null
+        nextPage: null
+        page: 1
+        hasPrevPage: false
+        hasNextPage: false
+        prevLink: null
+        nextLink: null
+    CustomizeError:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Nombre del error
+        detail:
+          type: string
+          description: Descripción del error 
+      example:
+        error: LIMIT fuera de rango
+        detail: El parametro -20 debe ser mayor igual a 1 y no debe superar la cantidad de documentos (4) de la coleccion
+    PostProduct:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Estado de la solicitud
+        newProduct:
+          $ref: '#/components/schemas/Product'
+          description: Resultado de la solicitud
+      example:
+        status: "ok"
+        newProduct: 
+            _id: "656e5a832943f50a737deae9"
+            title: "Producto dos"
+            description: "Este es un producto prueba dos"
+            code: "abc123p2"
+            price: 202
+            status: true
+            stock: 32
+            category: "muebles"
+            thumbnails:
+              - "thumbnail-p2-1"
+              - "thumbnail-p2-2"
+              - "thumbnail-p2-3"
+            owner: "admin"
+            __v: 0
+            id: "656e5a832943f50a737deae9"
+    CustomizeErrorPostProducts:
+      allOf:
+        - $ref: '#/components/schemas/CustomizeError'
+        - example:
+            error: Price y stock inválidos
+            detail: Los campos price y stock deben ser positivos
+    GetProductById:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Estado de la solicitud
+        MongoDBProduct:  
+          $ref: '#/components/schemas/Product'
+          description: Resultado de la solicitud
+      example:
+        status: "ok"
+        MongoDBProduct:
+          _id: "656e5a832943f50a737deae9"
+          title: "Producto dos"
+          description: "Este es un producto prueba dos"
+          code: "abc123p2"
+          price: 202
+          status: true
+          stock: 32
+          category: "muebles"
+          thumbnails:
+            - "thumbnail-p2-1"
+            - "thumbnail-p2-2"
+            - "thumbnail-p2-3"
+          owner: "admin"
+          __v: 0
+          id: "656e5a832943f50a737deae9"
+    CustomizeErrorGetProductById:
+      allOf:
+        - $ref: '#/components/schemas/CustomizeError'
+        - example:
+            error: PID inválido
+            detail: El PID hola solicitado tiene un formato inválido   
+    CustomizeErrorModifyProduct:
+      allOf:
+        - $ref: '#/components/schemas/CustomizeError'
+        - example:
+            error: Complete todos los campos
+            detail: Uno o más propiedades están incompletas o son inválidas. Lista de propiedades requeridas...
+    UnauthorizedError:
+      allOf:
+        - $ref: '#/components/schemas/CustomizeError'
+        - example:
+            error: Unauthorized
+            detail: No posee los permisos para modificar el producto seleccionado
+    UnauthorizedErrorDelete:
+      allOf:
+        - $ref: '#/components/schemas/CustomizeError'
+        - example:
+            error: Unauthorized
+            detail: No posee los permisos para eliminar el producto seleccionado
+    PutProduct:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Estado de la solicitud
+        updatedProducts:
+          $ref: '#/components/schemas/MongooseInfo'
+          description: Información de la solicitud brindada por Mongoose
+      example:
+        status: "ok"
+        updatedProducts: 
+          acknowledged: true
+          modifiedCount: 1
+          upsertedId: null
+          upsertedCount: 0
+          matchedCount: 1
+    DeleteProduct:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Estado de la solicitud
+        deletedProducts:
+          type: object
+          properties:
+            acknowledged:
+              type: boolean
+            deletedCount:
+              type: number
+          description: Información de la solicitud brindada por Mongoose
+      example:
+        status: "ok"
+        deletedProducts: 
+          acknowledged: true
+          deletedCount: 1
+  requestBodies:
+    createProduct:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Nombre del producto
+        description:
+          type: string
+          description: Descripción del producto   
+        code:
+          type: string
+          description: Código del producto
+        status:
+          type: boolean
+          description: Estado del producto
+        stock: 
+          type: number
+          description: Stock actual del producto
+        category:
+          type: string
+          description: Categoria del producto
+        thumbnails:
+          type: array
+          items:
+            type: string
+          description: Arreglo con enlaces a miniaturas del producto
+      example:
+        title: Producto dos
+        description: Este es un producto prueba dos 
+        code: abc123p2 
+        price: 202
+        status: true
+        stock: 32
+        category: muebles 
+        thumbnails: [thumbnail-p2-1, thumbnail-p2-2, thumbnail-p2-3]
+    modifyProduct:
+      allOf:
+        - $ref: '#/components/requestBodies/createProduct'
+        - example:
+            title: Producto dos modificado
+            description: Este es un producto prueba dos modificado
+            code: abc123m
+            
+
+

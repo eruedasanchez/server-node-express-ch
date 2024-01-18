@@ -1,0 +1,46 @@
+<h1>Checkout</h1>
+<hr>
+<h3>Cliente: {{userFirstName}} {{userLastName}}</h3>
+<h4>Email: {{userEmail}}</h4>
+<hr>
+{{#if orderSuccessfully}}
+        <div class="success">Todos los productos tienen stock disponible</div> 
+    {{else}}
+        <div class="error">Los siguientes productos no cuentan con stock disponible</div>
+        <ul>
+            {{#each productsWithoutStock}}
+                <li>Nombre del producto: {{this.productId.title}}</li>
+                <li>Descripcion del producto: {{this.productId.description}}</li>
+                <li>Precio del producto: ${{this.productId.price}}</li>
+                <li>Cantidad: {{this.quantity}}</li>
+                <br>
+            {{/each}}
+        </ul>
+{{/if}}
+<hr>
+<h4>Detalle de su pedido</h4>
+<ul>
+    {{#each productsWithStock}}
+        <li>Nombre del producto: {{this.productId.title}}</li>
+        <li>Descripcion del producto: {{this.productId.description}}</li>
+        <li>Precio del producto: ${{this.productId.price}}</li>
+        <li>Cantidad: {{this.quantity}}</li>
+        <li>Subtotal: ${{this.subtotal}}</li>
+        <br>
+    {{/each}}
+</ul>
+<hr>
+<h2>Total: ${{cartAmount}}</h2>
+<br>
+<form action="/mercadoPago/checkout/{{cartId}}?userEmail={{userEmail}}" method="post">
+    {{#each productsWithStock}}
+        <input type="hidden" name="productsSelected[]" value="{{this.productId.title}}">
+        <input type="hidden" name="productsSelected[]" value="{{this.productId.description}}">
+        <input type="hidden" name="productsSelected[]" value="{{this.productId.price}}">
+        <input type="hidden" name="productsSelected[]" value="{{this.quantity}}">
+        <input type="hidden" name="productsSelected[]" value="{{this.subtotal}}">
+    {{/each}}
+    <input type="submit" value="Confirmar compra">
+</form>
+<ul class="menu"><li> <a href="/products?userFirstName={{userFirstName}}&userLastName={{userLastName}}&userEmail={{userEmail}}&userRole={{userRole}}&cartId={{cartId}}">Continuar comprando</a></li></ul>
+
