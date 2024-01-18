@@ -1,5 +1,5 @@
 import winston from 'winston';
-import { config } from './config/config.js';
+// import { config } from './config/config.js';
 
 const customLevels = {
     personalizeLevels: { fatal:0, error:1, warning:2, info:3, http:4, debug:5 },
@@ -20,13 +20,13 @@ export const logger = winston.createLogger({
     ]
 })
 
-const transportDevConsole = new winston.transports.Console({
-    level: 'debug',
-    format: winston.format.combine(
-        winston.format.colorize({colors: customLevels.personalizeColors}),
-        winston.format.simple()
-    )
-})
+// const transportDevConsole = new winston.transports.Console({
+//     level: 'debug',
+//     format: winston.format.combine(
+//         winston.format.colorize({colors: customLevels.personalizeColors}),
+//         winston.format.simple()
+//     )
+// })
 
 const transportProdConsole = new winston.transports.Console({
     level: 'info',
@@ -36,11 +36,13 @@ const transportProdConsole = new winston.transports.Console({
     )
 })
 
-if(config.MODE !== 'production'){
-    logger.add(transportDevConsole);
-} else {
-    logger.add(transportProdConsole);
-} 
+// if(config.MODE !== 'production'){
+//     logger.add(transportDevConsole);
+// } else {
+//     logger.add(transportProdConsole);
+// } 
+
+logger.add(transportProdConsole);
 
 export const middLog = (req, res, next) => {
     req.logger = logger;

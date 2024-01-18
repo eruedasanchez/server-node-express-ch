@@ -21,11 +21,17 @@ const ASC = sorting.ASC, DESC = sorting.DESC;
 \*-----------------------------*/
 
 const transporter = nodemailer.createTransport({
-    service: config.NODEMAILER_SERVICE,
-    port: config.NODEMAILER_PORT,
+    // service: config.NODEMAILER_SERVICE,
+    // port: config.NODEMAILER_PORT,
+    // auth: {
+    //     user: config.TRANSPORT_USER,
+    //     pass: config.TRANSPORT_PASS
+    // }
+    service: 'gmail',
+    port: 587,
     auth: {
-        user: config.TRANSPORT_USER,
-        pass: config.TRANSPORT_PASS
+        user: 'ezequiel.ruedasanchez@gmail.com',
+        pass: 'szmiutoluzhlmeps'
     }
 })
 

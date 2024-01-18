@@ -76,9 +76,12 @@ export const initPassport = () => {
     
     passport.use('github', new github.Strategy(
         {
-            clientID: config.GITHUB_CLIENT_ID,
-            clientSecret: config.GITHUB_CLIENT_SECRET,
-            callbackURL: config.GITHUB_CALLBACK_URL
+            // clientID: config.GITHUB_CLIENT_ID,
+            // clientSecret: config.GITHUB_CLIENT_SECRET,
+            // callbackURL: config.GITHUB_CALLBACK_URL
+            clientID: 'Iv1.f39cdb52aec8edcb',
+            clientSecret: '601b9221a2029df1b4a7a270c1cd8f21396888bc',
+            callbackURL: 'http://localhost:8080/api/sessions/callbackGithub'
         },
         async (token, tokenRefresh, profile, done) => {
             try {
@@ -102,7 +105,8 @@ export const initPassport = () => {
     passport.use('current', new passportJWT.Strategy(
         {
             jwtFromRequest: new passportJWT.ExtractJwt.fromExtractors([searchToken]), 
-            secretOrKey: config.SECRET
+            // secretOrKey: config.SECRET
+            secretOrKey: 'secretPass'
         },
         (jwtContent, done) => {
             try {

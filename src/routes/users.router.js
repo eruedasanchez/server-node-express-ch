@@ -40,11 +40,17 @@ const uploadDocuments = configureMulter('documents');
 \*---------------------*/
 
 const transporter = nodemailer.createTransport({
-    service: config.NODEMAILER_SERVICE,
-    port: config.NODEMAILER_PORT,
+    // service: config.NODEMAILER_SERVICE,
+    // port: config.NODEMAILER_PORT,
+    // auth: {
+    //     user: config.TRANSPORT_USER,
+    //     pass: config.TRANSPORT_PASS
+    // }
+    service: 'gmail',
+    port: 587,
     auth: {
-        user: config.TRANSPORT_USER,
-        pass: config.TRANSPORT_PASS
+        user: 'ezequiel.ruedasanchez@gmail.com',
+        pass: 'szmiutoluzhlmeps'
     }
 })
 
@@ -96,7 +102,8 @@ router.post('/resetPassword', async (req, res, next) => {
         return res.redirect('/resetPassword?unregisteredEmail=El email ingresado no corresponde a un cliente registrado');
     }
     
-    let jwtoken = jwt.sign({user}, config.SECRET, {expiresIn: '1h'}); 
+    // let jwtoken = jwt.sign({user}, config.SECRET, {expiresIn: '1h'});
+    let jwtoken = jwt.sign({user}, 'secretPass', {expiresIn: '1h'}); 
     await sendEmail(jwtoken, user.email);
     
     return res.redirect(`/resetPassword?successResetRequest=Solicitud de reestablecimiento exitosa. Enviamos un mail a ${requestedEmail} para que continue con el proceso de reestablecemiento`);

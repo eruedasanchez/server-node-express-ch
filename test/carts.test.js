@@ -8,11 +8,19 @@ import { cartsModel } from "../src/dao/models/carts.model.js";
 import { jwtoken, cartTestData, productTestData } from "./dataTest.js";
 
 try {
-    await mongoose.connect(config.MONGO_URL, {dbName: config.DB_NAME});
+    // await mongoose.connect(config.MONGO_URL, {dbName: config.DB_NAME});
+    await mongoose.connect('mongodb+srv://ezequielruedasanchez:1I5FoZoRlSaz5TsX@cluster0.4vp9khz.mongodb.net/?retryWrites=true&w=majority', {dbName: 'ecommerce'});
     logger.info('MongoDB Atlas Conectada');
 } catch (error) {
     logger.fatal(`Error al conectarse con MongoDB Atlas. Detalle: ${error.message}`);
 }
+
+// try {
+//     await mongoose.connect(config.MONGO_URL, {dbName: config.DB_NAME});
+//     logger.info('MongoDB Atlas Conectada');
+// } catch (error) {
+//     logger.fatal(`Error al conectarse con MongoDB Atlas. Detalle: ${error.message}`);
+// }
 
 const expect = chai.expect;
 const requester = supertest("http://localhost:8080");
