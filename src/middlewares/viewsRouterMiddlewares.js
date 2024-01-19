@@ -17,7 +17,6 @@ export const auth = async (req, res, next) => {
     let token = req.query.token;
     try {
         let infoUser = jwt.verify(token, config.SECRET);
-        // let infoUser = jwt.verify(token, 'secretPass');
         req.user = infoUser.user;
         next();
     } catch (error) {

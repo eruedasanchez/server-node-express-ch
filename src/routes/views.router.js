@@ -63,18 +63,18 @@ const generateMockProduct = idx => {
 \*-------------------------------*/
 
 const transporter = nodemailer.createTransport({
-    // service: config.NODEMAILER_SERVICE,
-    // port: config.NODEMAILER_PORT,
-    // auth: {
-    //     user: config.TRANSPORT_USER,
-    //     pass: config.TRANSPORT_PASS
-    // }
-    service: 'gmail',
-    port: 587,
+    service: config.NODEMAILER_SERVICE,
+    port: config.NODEMAILER_PORT,
     auth: {
-        user: 'ezequiel.ruedasanchez@gmail.com',
-        pass: 'szmiutoluzhlmeps'
+        user: config.TRANSPORT_USER,
+        pass: config.TRANSPORT_PASS
     }
+    // service: 'gmail',
+    // port: 587,
+    // auth: {
+    //     user: 'ezequiel.ruedasanchez@gmail.com',
+    //     pass: 'szmiutoluzhlmeps'
+    // }
 })
 
 const purchaseConfirmationEmail = async ticket => {

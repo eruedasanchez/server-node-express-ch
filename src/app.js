@@ -24,9 +24,8 @@ import { errorHandler } from './services/errors/errorsHandler.js';
 import { middLog, logger } from './utilsWinston.js';
 
 const PORT = config.PORT || 8080;
+
 const PERSISTENCE = config.PERSISTENCE;
-// // test
-// const PERSISTENCE = "MONGODB";
 logger.info(`Persistencia en ${PERSISTENCE} iniciada`);
 
 const app = express();
