@@ -47,11 +47,13 @@ router.post('/checkout/:cid', async (req,res) => {
         const preference = {
             items: formattedProductsMP,
             back_urls: {
-                success: `https://server-node-express-ch-production.up.railway.app/successPurchase?userEmail=${userEmail}&cartId=${cartId}`,
+                success: `/successPurchase?userEmail=${userEmail}&cartId=${cartId}`,
             },
         }
 
         const responseMP = await mercadopago.preferences.create(preference);
+
+        console.log('responseMP:', responseMP);
         
         return res.redirect(responseMP.response.init_point);
     } catch (error) {
