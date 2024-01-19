@@ -47,7 +47,7 @@ router.post('/checkout/:cid', async (req,res) => {
         const preference = {
             items: formattedProductsMP,
             back_urls: {
-                success: `https://server-node-express-ch-production.up.railway.app//successPurchase?userEmail=${userEmail}&cartId=${cartId}`,
+                success: `https://server-node-express-ch-production.up.railway.app/successPurchase?userEmail=${userEmail}&cartId=${cartId}`,
             },
         }
 
