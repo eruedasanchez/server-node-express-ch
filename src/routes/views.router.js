@@ -315,7 +315,7 @@ router.get('/orderDetail/:cid/purchase', passport.authenticate('current', {sessi
     });
 });
 
-router.get('/successPurchase', async (req,res) => {
+router.post('/successPurchase', async (req,res) => {
     let { cartId, userEmail } = req.query;
     let cid = new mongoose.Types.ObjectId(cartId);
     
@@ -348,7 +348,7 @@ router.get('/successPurchase', async (req,res) => {
     await purchaseConfirmationEmail(ticket);
     
     res.setHeader('Content-Type','text/html');
-    res.status(200).render('successPurchase', {
+    return res.status(200).render('successPurchase', {
         header: 'Compra exitosa',
         userEmail: userEmail, 
     });
