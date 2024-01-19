@@ -33,6 +33,14 @@ const createArrayItemsMP = items => {
     return itemsMP;
 }
 
+// mercadopago.configure({ 
+    // client_id: '3708476731083689',
+    // client_secret: 'n9QfV9oDOwdTbph5JjwBMbT2nxO1J9JU',
+    // access_token: config.ACCESS_TOKEN_MP,
+    // access_token: 'APP_USR-3708476731083689-011709-c222d14b6700d6b4276df23ac6ec3f21-1641109915'
+// });
+
+// mercadopago.configure({ access_token: 'APP_USR-3708476731083689-011709-c222d14b6700d6b4276df23ac6ec3f21-1641109915' });
 mercadopago.configure({ access_token: config.ACCESS_TOKEN_MP });
 
 router.post('/checkout/:cid', async (req,res) => {
@@ -47,7 +55,8 @@ router.post('/checkout/:cid', async (req,res) => {
         const preference = {
             items: formattedProductsMP,
             back_urls: {
-                success: `/successPurchase?userEmail=${userEmail}&cartId=${cartId}`,
+                // success: `/successPurchase?userEmail=${userEmail}&cartId=${cartId}`
+                success: 'https://server-node-express-ch-production.up.railway.app/'
             },
         }
 
