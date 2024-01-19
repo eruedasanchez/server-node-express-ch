@@ -47,7 +47,7 @@ router.post('/checkout/:cid', async (req,res) => {
         const preference = {
             items: formattedProductsMP,
             back_urls: {
-                success: `http://localhost:8080/successPurchase?userEmail=${userEmail}&cartId=${cartId}`,
+                success: `/successPurchase?userEmail=${userEmail}&cartId=${cartId}`,
             },
         }
 
