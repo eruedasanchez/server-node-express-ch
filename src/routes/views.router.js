@@ -69,12 +69,6 @@ const transporter = nodemailer.createTransport({
         user: config.TRANSPORT_USER,
         pass: config.TRANSPORT_PASS
     }
-    // service: 'gmail',
-    // port: 587,
-    // auth: {
-    //     user: 'ezequiel.ruedasanchez@gmail.com',
-    //     pass: 'szmiutoluzhlmeps'
-    // }
 })
 
 const purchaseConfirmationEmail = async ticket => {

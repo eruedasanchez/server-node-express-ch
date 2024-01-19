@@ -10,9 +10,9 @@ export const config = {
     TRANSPORT_USER: process.env.TRANSPORT_USER,
     TRANSPORT_PASS: process.env.TRANSPORT_PASS,
     PERSISTENCE: process.env.PERSISTENCE,
-    // MODE: process.env.MODE || 'development',
-    // GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-    // GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
-    // GITHUB_CALLBACK_URL: process.env.GITHUB_CALLBACK_URL,
+    MODE: process.env.MODE,
+    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+    GITHUB_CALLBACK_URL: process.env.GITHUB_CALLBACK_URL,
     // ACCESS_TOKEN: process.env.ACCESS_TOKEN
 }
