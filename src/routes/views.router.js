@@ -315,7 +315,7 @@ router.get('/orderDetail/:cid/purchase', passport.authenticate('current', {sessi
     });
 });
 
-router.post('/successPurchase', async (req,res) => {
+router.get('/successPurchase', async (req,res) => {
     let { cartId, userEmail } = req.query;
     let cid = new mongoose.Types.ObjectId(cartId);
     
