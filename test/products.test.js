@@ -7,8 +7,8 @@ import { config } from '../src/config/config.js';
 import { buildProductVersion, jwtoken, productTestData } from './dataTest.js';
 
 try {
-    // await mongoose.connect(config.MONGO_URL, {dbName: config.DB_NAME});
-    await mongoose.connect('mongodb+srv://ezequielruedasanchez:1I5FoZoRlSaz5TsX@cluster0.4vp9khz.mongodb.net/?retryWrites=true&w=majority', {dbName: 'ecommerce'});
+    await mongoose.connect(config.MONGO_URL, {dbName: config.DB_NAME});
+    // await mongoose.connect('mongodb+srv://ezequielruedasanchez:1I5FoZoRlSaz5TsX@cluster0.4vp9khz.mongodb.net/?retryWrites=true&w=majority', {dbName: 'ecommerce'});
     logger.info('MongoDB Atlas Conectada');
 } catch (error) {
     logger.fatal(`Error al conectarse con MongoDB Atlas. Detalle: ${error.message}`);
