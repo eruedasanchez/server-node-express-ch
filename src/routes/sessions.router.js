@@ -82,8 +82,8 @@ router.post('/login', function(req, res, next) {
     })(req, res, next);
 }, (req, res) => {
     let user = req.user;
-    // let token = jwt.sign({user}, config.SECRET, {expiresIn: '1h'});
-    let token = jwt.sign({user}, 'secretPass' , {expiresIn: '1h'});
+    let token = jwt.sign({user}, config.SECRET, {expiresIn: '1h'});
+    // let token = jwt.sign({user}, 'secretPass' , {expiresIn: '1h'});
     
     res.cookie('coderCookie', token, {
         maxAge: 1000 * 60 * 60, 

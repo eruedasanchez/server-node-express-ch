@@ -1,34 +1,28 @@
-// import { config } from '../config/config.js';
+import { config } from '../config/config.js';
 
-// let productsDAO, cartsDAO;
+let productsDAO, cartsDAO;
 let messagesDAO = await import('./messagesMongoDAO.js');
 messagesDAO = messagesDAO.MessagesMongoDAO;
 let ticketsDAO = await import('./ticketsMongoDAO.js');
 ticketsDAO = ticketsDAO.TicketsMongoDAO;
 
-let productsDAO = await import('./productsMongoDAO.js');
-productsDAO = productsDAO.ProductsMongoDAO;
-let cartsDAO = await import('./cartsMongoDAO.js');
-cartsDAO = cartsDAO.CartsMongoDAO;
-        
+switch (config.PERSISTENCE) {
+    case "FS":
+        productsDAO = await import('./productsFsDAO.js');
+        cartsDAO = await import('./cartsFsDAO.js');
+        productsDAO = productsDAO.ProductsFsDAO;
+        cartsDAO = cartsDAO.CartsFsDAO;    
+        break;
 
-// switch (config.PERSISTENCE) {
-//     case "FS":
-//         productsDAO = await import('./productsFsDAO.js');
-//         cartsDAO = await import('./cartsFsDAO.js');
-//         productsDAO = productsDAO.ProductsFsDAO;
-//         cartsDAO = cartsDAO.CartsFsDAO;    
-//         break;
-
-//     case "MONGODB":
-//         productsDAO = await import('./productsMongoDAO.js');
-//         cartsDAO = await import('./cartsMongoDAO.js');
-//         productsDAO = productsDAO.ProductsMongoDAO;
-//         cartsDAO = cartsDAO.CartsMongoDAO;
-//         break;
+    case "MONGODB":
+        productsDAO = await import('./productsMongoDAO.js');
+        cartsDAO = await import('./cartsMongoDAO.js');
+        productsDAO = productsDAO.ProductsMongoDAO;
+        cartsDAO = cartsDAO.CartsMongoDAO;
+        break;
     
-//     default:
-//         throw new Error("Persistencia invalida");
-// }
+    default:
+        throw new Error("Persistencia invalida");
+}
 
 export { productsDAO, cartsDAO, messagesDAO, ticketsDAO };

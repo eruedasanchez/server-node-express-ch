@@ -105,8 +105,8 @@ export const initPassport = () => {
     passport.use('current', new passportJWT.Strategy(
         {
             jwtFromRequest: new passportJWT.ExtractJwt.fromExtractors([searchToken]), 
-            // secretOrKey: config.SECRET
-            secretOrKey: 'secretPass'
+            secretOrKey: config.SECRET
+            // secretOrKey: 'secretPass'
         },
         (jwtContent, done) => {
             try {

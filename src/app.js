@@ -24,9 +24,9 @@ import { errorHandler } from './services/errors/errorsHandler.js';
 import { middLog, logger } from './utilsWinston.js';
 
 const PORT = config.PORT || 8080;
-// const PERSISTENCE = config.PERSISTENCE;
-// test
-const PERSISTENCE = "MONGODB";
+const PERSISTENCE = config.PERSISTENCE;
+// // test
+// const PERSISTENCE = "MONGODB";
 logger.info(`Persistencia en ${PERSISTENCE} iniciada`);
 
 const app = express();
@@ -65,14 +65,11 @@ app.use('/chat', chatRouter);
 
 app.use(session({
     secret: config.SESSION_SECRET_KEY,
-    // secret: 'claveSecreta',
     resave: true,
     saveUninitialized: true,
     store: ConnectMongo.create({
         mongoUrl: `${config.MONGO_URL}&dbName=${config.DB_NAME}`,
         ttl: config.SESSION_TTL
-        // mongoUrl: 'mongodb+srv://ezequielruedasanchez:1I5FoZoRlSaz5TsX@cluster0.4vp9khz.mongodb.net/?retryWrites=true&w=majority&dbName=ecommerce',
-        // ttl: 300
     })
 }))
 
@@ -96,7 +93,6 @@ initChat(serverSocket);
 
 try {
     await mongoose.connect(config.MONGO_URL, {dbName: config.DB_NAME});
-    // await mongoose.connect('mongodb+srv://ezequielruedasanchez:1I5FoZoRlSaz5TsX@cluster0.4vp9khz.mongodb.net/?retryWrites=true&w=majority', {dbName: 'ecommerce'});
     logger.info('MongoDB Atlas Conectada');
 } catch (error) {
     logger.fatal(`Error al conectarse con MongoDB Atlas. Detalle: ${error.message}`);

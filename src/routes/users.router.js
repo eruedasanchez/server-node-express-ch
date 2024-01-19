@@ -102,8 +102,8 @@ router.post('/resetPassword', async (req, res, next) => {
         return res.redirect('/resetPassword?unregisteredEmail=El email ingresado no corresponde a un cliente registrado');
     }
     
-    // let jwtoken = jwt.sign({user}, config.SECRET, {expiresIn: '1h'});
-    let jwtoken = jwt.sign({user}, 'secretPass', {expiresIn: '1h'}); 
+    let jwtoken = jwt.sign({user}, config.SECRET, {expiresIn: '1h'});
+    // let jwtoken = jwt.sign({user}, 'secretPass', {expiresIn: '1h'}); 
     await sendEmail(jwtoken, user.email);
     
     return res.redirect(`/resetPassword?successResetRequest=Solicitud de reestablecimiento exitosa. Enviamos un mail a ${requestedEmail} para que continue con el proceso de reestablecemiento`);
