@@ -33,8 +33,8 @@ const createArrayItemsMP = items => {
     return itemsMP;
 }
 
-mercadopago.configure({ access_token: config.ACCESS_TOKEN_MP });
-// mercadopago.configure({ access_token: 'APP_USR-3708476731083689-011709-c222d14b6700d6b4276df23ac6ec3f21-1641109915' });
+// mercadopago.configure({ access_token: config.ACCESS_TOKEN_MP });
+mercadopago.configure({ access_token: 'APP_USR-3708476731083689-011709-c222d14b6700d6b4276df23ac6ec3f21-1641109915' });
 
 router.post('/checkout/:cid', async (req,res) => {
     try {
